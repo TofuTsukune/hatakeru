@@ -1,73 +1,40 @@
-# React + TypeScript + Vite
+# 🌿 ハタケル
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+家庭菜園・市民農園向けの畑管理ウェブアプリです。  
+複数の畑を管理し、作物の栽培記録・作業ログ・カレンダー・写真をまとめて記録できます。
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 機能
 
-## React Compiler
+| タブ | 内容 |
+|------|------|
+| 📍 畑マップ | グリッドで畑のレイアウトを可視化。区画ごとに作物・植付け日・収穫予定日を管理 |
+| 🥬 作物 | 作物マスタの登録・編集。ステータス（予定 / 栽培中 / 収穫済み）を管理 |
+| 📋 作業ログ | 水やり・施肥・収穫などの作業記録。収穫量・費用も記録可能 |
+| 📅 カレンダー | 植付け日・収穫予定・作業ログ・予定をカレンダーで確認 |
+| 📷 写真 | 作物の成長記録を写真で残す |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**その他の機能：**
+- 複数の畑を作成・切り替えて管理
+- データのエクスポート / インポート（JSON）
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 技術スタック
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **React 18** + **Vite**
+- **TypeScript**
+- **Tailwind CSS v4**
+- データ保存: `localStorage`（写真は `IndexedDB`）
+- サーバー不要・インストール不要
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 開発環境のセットアップ
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev       # 開発サーバー起動 → http://localhost:5173
+npm run build     # プロダクションビルド
 ```
