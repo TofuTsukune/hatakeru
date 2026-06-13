@@ -3,15 +3,36 @@
 @layer base {
   :root {
     color-scheme: dark;
+    --c-bg:      #191919;
+    --c-surface: #252525;
+    --c-hover:   #2f2f2f;
+    --c-border:  #373737;
+    --c-text:    #e6e6e6;
+    --c-muted:   #9b9b9b;
+    --c-faint:   #555555;
+    --c-accent:  #4d8f73;
+    --c-danger:  #eb5757;
   }
 
+  * { box-sizing: border-box; }
+
   body {
-    @apply bg-[#1a1a2e] text-[#e2e8f0] m-0;
-    font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+    background: var(--c-bg);
+    color: var(--c-text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
     -webkit-font-smoothing: antialiased;
   }
 
-  * {
-    box-sizing: border-box;
+  ::selection {
+    background: var(--c-accent);
+    color: #fff;
   }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--c-border); border-radius: 3px; }
 }

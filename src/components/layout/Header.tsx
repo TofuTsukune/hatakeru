@@ -10,11 +10,11 @@ interface Props {
 }
 
 const TABS: { id: Tab; label: string }[] = [
-  { id: 'map', label: '📍 畑マップ' },
-  { id: 'crops', label: '🥬 作物' },
-  { id: 'logs', label: '📋 作業ログ' },
-  { id: 'calendar', label: '📅 カレンダー' },
-  { id: 'photos', label: '📷 写真' },
+  { id: 'map',      label: '畑マップ' },
+  { id: 'crops',    label: '作物' },
+  { id: 'logs',     label: '作業ログ' },
+  { id: 'calendar', label: 'カレンダー' },
+  { id: 'photos',   label: '写真' },
 ];
 
 export function Header({ activeTab, onTabChange }: Props) {
@@ -40,69 +40,98 @@ export function Header({ activeTab, onTabChange }: Props) {
   };
 
   return (
-    <header className="bg-[#16213e] border-b border-[#2d3748] sticky top-0 z-40">
-      {/* App title + Field selector row */}
-      <div className="flex items-center gap-2 px-4 py-2 border-b border-[#2d3748]">
-        <span className="text-base font-bold text-[#68d391] mr-2">ハタケル</span>
-        <span className="text-xs text-[#a0aec0]">畑:</span>
-        <select
-          className="bg-[#0f3460] border border-[#2d3748] rounded text-sm text-[#e2e8f0] px-2 py-1 focus:outline-none"
-          value={state.activeFieldId}
-          onChange={(e) => dispatch({ type: 'FIELD_SET_ACTIVE', id: e.target.value })}
-        >
-          {state.fields.map((f) => (
-            <option key={f.id} value={f.id}>
-              {f.name}
-            </option>
-          ))}
-        </select>
-        <button
-          onClick={() => { setEditingField(false); setShowFieldModal(true); }}
-          className="text-xs text-[#63b3ed] hover:text-[#90cdf4] px-2"
-        >
-          ＋ 追加
-        </button>
-        {activeField && (
-          <button
-            onClick={() => { setEditingField(true); setShowFieldModal(true); }}
-            className="text-xs text-[#a0aec0] hover:text-[#e2e8f0] px-2"
+    <header style={{ background: 'var(--c-surface)', borderBottom: '1px solid var(--c-border)' }}
+      className="sticky top-0 z-40">
+      {/* Top bar */}
+      <div className="max-w-5xl mx-auto px-4 h-12 flex items-center gap-3">
+        {/* App name */}
+        <span className="font-semibold text-sm" style={{ color: 'var(--c-accent)' }}>
+          🌿 ハタケル
+        </span>
+
+        <span style={{ color: 'var(--c-faint)' }} className="text-xs">/</span>
+
+        {/* Field selector */}
+        <div className="flex items-center gap-1">
+          <select
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--c-text)',
+              fontSize: '13px',
+              fontFamily: 'inherit',
+              cursor: 'pointer',
+              outline: 'none',
+            }}
+            value={state.activeFieldId}
+            onChange={(e) => dispatch({ type: 'FIELD_SET_ACTIVE', id: e.target.value })}
           >
-            編集
-          </button>
-        )}
-        <div className="ml-auto flex gap-2">
+            {state.fields.map((f) => (
+              <option key={f.id} value={f.id} style={{ background: '#252525' }}>
+                {f.name}
+              </option>
+            ))}
+          </select>
           <button
-            onClick={() => exportData(state)}
-            className="text-xs text-[#a0aec0] hover:text-[#e2e8f0] px-2 py-1 bg-[#0f3460] rounded border border-[#2d3748]"
+            onClick={() => { setEditingField(false); setShowFieldModal(true); }}
+            style={{ color: 'var(--c-muted)' }}
+            className="text-xs hover:opacity-70 px-1"
+            title="畑を追加"
           >
-            📤 エクスポート
+            ＋
           </button>
-          <button
-            onClick={() => importRef.current?.click()}
-            className="text-xs text-[#a0aec0] hover:text-[#e2e8f0] px-2 py-1 bg-[#0f3460] rounded border border-[#2d3748]"
-          >
-            📥 インポート
-          </button>
-          <input ref={importRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
+          {activeField && (
+            <button
+              onClick={() => { setEditingField(true); setShowFieldModal(true); }}
+              style={{ color: 'var(--c-muted)' }}
+              className="text-xs hover:opacity-70 px-1"
+              title="畑を編集"
+            >
+              ···
+            </button>
+          )}
         </div>
+
+        {/* Spacer */}
+        <div className="flex-1" />
+
+        {/* Export / Import */}
+        <button
+          onClick={() => exportData(state)}
+          style={{ color: 'var(--c-muted)', fontSize: '12px' }}
+          className="hover:opacity-70 px-2 py-1"
+          title="エクスポート"
+        >
+          ↑ エクスポート
+        </button>
+        <button
+          onClick={() => importRef.current?.click()}
+          style={{ color: 'var(--c-muted)', fontSize: '12px' }}
+          className="hover:opacity-70 px-2 py-1"
+          title="インポート"
+        >
+          ↓ インポート
+        </button>
+        <input ref={importRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
       </div>
 
-      {/* Tab row */}
-      <nav className="flex overflow-x-auto">
+      {/* Tab bar */}
+      <div className="max-w-5xl mx-auto px-4 flex gap-1 pb-0">
         {TABS.map((tab) => (
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
-            className={`px-4 py-3 text-sm whitespace-nowrap transition-colors border-b-2 ${
+            className="px-3 py-2 text-xs font-medium rounded-t-md transition-colors"
+            style={
               activeTab === tab.id
-                ? 'border-[#63b3ed] text-[#63b3ed]'
-                : 'border-transparent text-[#a0aec0] hover:text-[#e2e8f0]'
-            }`}
+                ? { background: 'var(--c-bg)', color: 'var(--c-text)' }
+                : { background: 'transparent', color: 'var(--c-muted)' }
+            }
           >
             {tab.label}
           </button>
         ))}
-      </nav>
+      </div>
 
       {showFieldModal && (
         <FieldModal

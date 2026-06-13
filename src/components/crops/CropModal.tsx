@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Modal } from '../common/Modal';
-import { FormField, inputCls, selectCls } from '../common/FormField';
+import { FormField, inputCls, inputStyle, selectCls, selectStyle } from '../common/FormField';
 import { ColorPicker, COLORS } from '../common/ColorPicker';
 import { useApp } from '../../store/AppContext';
 import type { Crop, CropStatus } from '../../types';
@@ -25,15 +25,7 @@ export function CropModal({ crop, onClose }: Props) {
     if (crop) {
       dispatch({ type: 'CROP_UPDATE', crop: { ...crop, name: name.trim(), variety, status, color, notes } });
     } else {
-      const newCrop: Crop = {
-        id: uid(),
-        fieldId: state.activeFieldId,
-        name: name.trim(),
-        variety,
-        status,
-        color,
-        notes,
-      };
+      const newCrop: Crop = { id: uid(), fieldId: state.activeFieldId, name: name.trim(), variety, status, color, notes };
       dispatch({ type: 'CROP_ADD', crop: newCrop });
     }
     onClose();
@@ -49,24 +41,13 @@ export function CropModal({ crop, onClose }: Props) {
   return (
     <Modal title={crop ? '作物を編集' : '作物を追加'} onClose={onClose}>
       <FormField label="作物名" required>
-        <input
-          className={inputCls}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="例: トマト"
-          autoFocus
-        />
+        <input className={inputCls} style={inputStyle} value={name} onChange={(e) => setName(e.target.value)} placeholder="例: トマト" autoFocus />
       </FormField>
       <FormField label="品種">
-        <input
-          className={inputCls}
-          value={variety}
-          onChange={(e) => setVariety(e.target.value)}
-          placeholder="例: ミニトマト"
-        />
+        <input className={inputCls} style={inputStyle} value={variety} onChange={(e) => setVariety(e.target.value)} placeholder="例: ミニトマト" />
       </FormField>
       <FormField label="ステータス">
-        <select className={selectCls} value={status} onChange={(e) => setStatus(e.target.value as CropStatus)}>
+        <select className={selectCls} style={selectStyle} value={status} onChange={(e) => setStatus(e.target.value as CropStatus)}>
           {(Object.entries(STATUS_LABELS) as [CropStatus, { label: string }][]).map(([k, v]) => (
             <option key={k} value={k}>{v.label}</option>
           ))}
@@ -76,30 +57,17 @@ export function CropModal({ crop, onClose }: Props) {
         <ColorPicker value={color} onChange={setColor} />
       </FormField>
       <FormField label="メモ">
-        <textarea className={inputCls} rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} />
+        <textarea className={inputCls} style={inputStyle} rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} />
       </FormField>
-
-      <div className="flex gap-2 mt-4">
-        <button
-          onClick={handleSave}
-          className="flex-1 bg-[#63b3ed] hover:bg-[#4299e1] text-white rounded-lg py-2 text-sm font-medium"
-        >
-          保存
-        </button>
+      <div className="flex gap-2 mt-5">
+        <button onClick={handleSave} className="flex-1 rounded-md py-2 text-sm font-medium text-white"
+          style={{ background: 'var(--c-accent)' }}>保存</button>
         {crop && (
-          <button
-            onClick={handleDelete}
-            className="bg-[#fc8181] hover:bg-[#f56565] text-white rounded-lg px-4 py-2 text-sm font-medium"
-          >
-            削除
-          </button>
+          <button onClick={handleDelete} className="rounded-md px-4 py-2 text-sm font-medium"
+            style={{ color: 'var(--c-danger)', background: 'var(--c-hover)' }}>削除</button>
         )}
-        <button
-          onClick={onClose}
-          className="bg-[#2d3748] hover:bg-[#4a5568] text-[#a0aec0] rounded-lg px-4 py-2 text-sm"
-        >
-          キャンセル
-        </button>
+        <button onClick={onClose} className="rounded-md px-4 py-2 text-sm"
+          style={{ background: 'var(--c-hover)', color: 'var(--c-muted)' }}>キャンセル</button>
       </div>
     </Modal>
   );

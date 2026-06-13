@@ -12,9 +12,9 @@ function AppInner() {
   const [activeTab, setActiveTab] = useState<Tab>('map');
 
   return (
-    <div className="min-h-screen bg-[#1a1a2e]">
+    <div className="min-h-screen" style={{ background: 'var(--c-bg)' }}>
       <Header activeTab={activeTab} onTabChange={setActiveTab} />
-      <main className="max-w-4xl mx-auto">
+      <main className="max-w-5xl mx-auto px-4 py-6">
         {activeTab === 'map' && <HatakeMap />}
         {activeTab === 'crops' && <CropList />}
         {activeTab === 'logs' && <LogList />}

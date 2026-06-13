@@ -9,16 +9,26 @@ interface Props {
 export function FormField({ label, children, required }: Props) {
   return (
     <div className="mb-3">
-      <label className="block text-xs text-[#a0aec0] mb-1">
+      <label className="block text-xs mb-1.5 font-medium" style={{ color: 'var(--c-muted)' }}>
         {label}
-        {required && <span className="text-[#fc8181] ml-1">*</span>}
+        {required && <span className="ml-1" style={{ color: 'var(--c-danger)' }}>*</span>}
       </label>
       {children}
     </div>
   );
 }
 
-export const inputCls =
-  'w-full bg-[#0f3460] border border-[#2d3748] rounded-lg px-3 py-2 text-sm text-[#e2e8f0] focus:outline-none focus:border-[#63b3ed]';
+export const inputCls = [
+  'w-full rounded-md px-3 py-2 text-sm outline-none transition-colors',
+  'placeholder:text-[var(--c-faint)]',
+].join(' ');
+
+export const inputStyle = {
+  background: 'var(--c-hover)',
+  border: '1px solid var(--c-border)',
+  color: 'var(--c-text)',
+  fontFamily: 'inherit',
+};
 
 export const selectCls = inputCls;
+export const selectStyle = { ...inputStyle, cursor: 'pointer' };

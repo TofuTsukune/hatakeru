@@ -15,14 +15,8 @@ export function CalendarView() {
 
   const todayStr = now.toISOString().slice(0, 10);
 
-  const prevMonth = () => {
-    if (month === 0) { setMonth(11); setYear((y) => y - 1); }
-    else setMonth((m) => m - 1);
-  };
-  const nextMonth = () => {
-    if (month === 11) { setMonth(0); setYear((y) => y + 1); }
-    else setMonth((m) => m + 1);
-  };
+  const prevMonth = () => { if (month === 0) { setMonth(11); setYear((y) => y - 1); } else setMonth((m) => m - 1); };
+  const nextMonth = () => { if (month === 11) { setMonth(0); setYear((y) => y + 1); } else setMonth((m) => m + 1); };
 
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -32,12 +26,9 @@ export function CalendarView() {
   const fieldLogs = state.logs.filter((l) => l.fieldId === state.activeFieldId);
   const fieldEvents = state.events.filter((e) => e.fieldId === state.activeFieldId);
 
-
-
   const getDayContent = (dateStr: string) => {
-    const items: { text: string; color: string; id?: string; event?: HatakeEvent }[] = [];
+    const items: { text: string; style: string; event?: HatakeEvent }[] = [];
 
-    // Plot dates
     if (field) {
       Object.entries(field.plots).forEach(([key, plotData]) => {
         const [r, c] = key.split('-').map(Number);
@@ -45,30 +36,22 @@ export function CalendarView() {
         const crop = fieldCrops.find((cr) => cr.id === plotData.cropId);
         if (!crop) return;
         if (plotData.plantedDate === dateStr)
-          items.push({ text: `🌱 植付け: ${crop.name} (${lbl})`, color: 'text-[#68d391]' });
+          items.push({ text: `🌱 ${crop.name} (${lbl})`, style: 'color:#6dbb8a' });
         if (plotData.expectedHarvest === dateStr)
-          items.push({ text: `🌾 収穫予定: ${crop.name} (${lbl})`, color: 'text-[#f6ad55]' });
+          items.push({ text: `🌾 ${crop.name} (${lbl})`, style: 'color:#c9a84c' });
       });
     }
-
-    // Work logs
-    fieldLogs
-      .filter((l) => l.date === dateStr)
-      .forEach((l) => {
-        const lt = LOG_TYPES[l.type] ?? { icon: '📝', label: l.type };
-        items.push({ text: `${lt.icon} ${lt.label}`, color: 'text-[#9ae6b4]' });
+    fieldLogs.filter((l) => l.date === dateStr).forEach((l) => {
+      const lt = LOG_TYPES[l.type] ?? { icon: '📝', label: l.type };
+      items.push({ text: `${lt.icon} ${lt.label}`, style: 'color:var(--c-muted)' });
+    });
+    fieldEvents.filter((e) => e.date === dateStr).forEach((e) => {
+      items.push({
+        text: e.title,
+        style: e.done ? 'color:var(--c-faint);text-decoration:line-through' : 'color:#6faed4',
+        event: e,
       });
-
-    // Events
-    fieldEvents
-      .filter((e) => e.date === dateStr)
-      .forEach((e) => {
-        items.push({
-          text: e.title,
-          color: e.done ? 'text-[#a0aec0] line-through' : 'text-[#63b3ed]',
-          event: e,
-        });
-      });
+    });
 
     return items;
   };
@@ -78,73 +61,67 @@ export function CalendarView() {
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
 
-  return (
-    <div className="p-4">
-      <div className="flex items-center justify-between mb-4">
-        <button
-          onClick={prevMonth}
-          className="text-[#a0aec0] hover:text-[#e2e8f0] px-3 py-1.5 bg-[#0f3460] border border-[#2d3748] rounded-lg text-sm"
-        >
-          ◀
-        </button>
-        <h2 className="text-base font-semibold text-[#e2e8f0]">
-          {year}年 {month + 1}月
-        </h2>
-        <button
-          onClick={nextMonth}
-          className="text-[#a0aec0] hover:text-[#e2e8f0] px-3 py-1.5 bg-[#0f3460] border border-[#2d3748] rounded-lg text-sm"
-        >
-          ▶
-        </button>
-      </div>
+  const btnCls = 'text-xs px-3 py-1.5 rounded-md transition-colors';
+  const btnStyle = { background: 'var(--c-surface)', color: 'var(--c-muted)', border: '1px solid var(--c-border)' };
 
-      <div className="mb-2">
-        <button
-          onClick={() => setClickedDate(todayStr)}
-          className="text-xs text-[#63b3ed] hover:text-[#90cdf4]"
-        >
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-3">
+          <button className={btnCls} style={btnStyle}
+            onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--c-hover)')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--c-surface)')}
+            onClick={prevMonth}>◀</button>
+          <h1 className="text-base font-semibold" style={{ color: 'var(--c-text)' }}>
+            {year}年 {month + 1}月
+          </h1>
+          <button className={btnCls} style={btnStyle}
+            onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--c-hover)')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--c-surface)')}
+            onClick={nextMonth}>▶</button>
+        </div>
+        <button onClick={() => setClickedDate(todayStr)} className="text-xs font-medium px-3 py-1.5 rounded-md text-white"
+          style={{ background: 'var(--c-accent)' }}>
           ＋ 予定を追加
         </button>
       </div>
 
-      <div className="grid grid-cols-7 gap-px bg-[#2d3748] rounded-lg overflow-hidden">
-        {['日', '月', '火', '水', '木', '金', '土'].map((d) => (
-          <div key={d} className="bg-[#16213e] text-center text-xs text-[#a0aec0] py-2">
+      {/* Day headers */}
+      <div className="grid grid-cols-7 mb-1">
+        {['日', '月', '火', '水', '木', '金', '土'].map((d, i) => (
+          <div key={d} className="text-center text-xs py-2 font-medium"
+            style={{ color: i === 0 ? '#c07070' : i === 6 ? '#6faed4' : 'var(--c-muted)' }}>
             {d}
           </div>
         ))}
+      </div>
+
+      {/* Calendar grid */}
+      <div className="grid grid-cols-7 gap-px" style={{ background: 'var(--c-border)', borderRadius: 8, overflow: 'hidden' }}>
         {cells.map((day, idx) => {
-          if (!day) return <div key={idx} className="bg-[#16213e] min-h-[80px]" />;
+          if (!day) return <div key={idx} style={{ background: 'var(--c-bg)', minHeight: 88 }} />;
           const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
           const isToday = dateStr === todayStr;
           const items = getDayContent(dateStr);
           return (
-            <div
-              key={idx}
-              className="bg-[#16213e] min-h-[80px] p-1 cursor-pointer hover:bg-[#0f3460] transition-colors"
+            <div key={idx}
+              className="p-2 cursor-pointer transition-colors"
+              style={{ background: 'var(--c-bg)', minHeight: 88 }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--c-surface)')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--c-bg)')}
               onClick={() => setClickedDate(dateStr)}
             >
-              <div
-                className={`text-xs w-6 h-6 flex items-center justify-center rounded-full mb-1 ${
-                  isToday
-                    ? 'bg-[#63b3ed] text-white font-bold'
-                    : 'text-[#e2e8f0]'
-                }`}
-              >
+              <div className={`text-xs w-6 h-6 flex items-center justify-center rounded-full mb-1 font-medium`}
+                style={isToday
+                  ? { background: 'var(--c-accent)', color: '#fff' }
+                  : { color: 'var(--c-text)' }}>
                 {day}
               </div>
               <div className="space-y-0.5">
                 {items.map((item, i) => (
-                  <div
-                    key={i}
-                    className={`text-[10px] leading-tight truncate ${item.color} cursor-pointer`}
-                    onClick={(e) => {
-                      if (item.event) {
-                        e.stopPropagation();
-                        setEditEvent(item.event);
-                      }
-                    }}
-                  >
+                  <div key={i} className="text-[10px] leading-tight truncate cursor-pointer"
+                    style={{ cssText: item.style } as React.CSSProperties}
+                    onClick={(e) => { if (item.event) { e.stopPropagation(); setEditEvent(item.event); } }}>
                     {item.text}
                   </div>
                 ))}
@@ -154,18 +131,8 @@ export function CalendarView() {
         })}
       </div>
 
-      {clickedDate && (
-        <EventModal
-          initialDate={clickedDate}
-          onClose={() => setClickedDate(null)}
-        />
-      )}
-      {editEvent && (
-        <EventModal
-          event={editEvent}
-          onClose={() => setEditEvent(null)}
-        />
-      )}
+      {clickedDate && <EventModal initialDate={clickedDate} onClose={() => setClickedDate(null)} />}
+      {editEvent && <EventModal event={editEvent} onClose={() => setEditEvent(null)} />}
     </div>
   );
 }

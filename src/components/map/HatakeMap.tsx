@@ -15,28 +15,26 @@ export function HatakeMap() {
   if (!field) return <EmptyState icon="🌾" message="畑が登録されていません" />;
 
   const fieldCrops = state.crops.filter((c) => c.fieldId === state.activeFieldId);
-
-  // Collect used crop IDs for legend
   const usedCropIds = new Set(Object.values(field.plots).map((p) => p.cropId));
   const legendCrops = fieldCrops.filter((c) => usedCropIds.has(c.id));
 
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-base font-semibold text-[#e2e8f0]">{field.name}</h2>
+    <div>
+      <div className="flex justify-between items-center mb-5">
+        <h1 className="text-base font-semibold" style={{ color: 'var(--c-text)' }}>{field.name}</h1>
         <button
           onClick={() => setShowResize(true)}
-          className="text-xs text-[#a0aec0] hover:text-[#e2e8f0] px-3 py-1.5 bg-[#0f3460] border border-[#2d3748] rounded-lg"
+          className="text-xs px-3 py-1.5 rounded-md transition-colors"
+          style={{ background: 'var(--c-surface)', color: 'var(--c-muted)', border: '1px solid var(--c-border)' }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--c-hover)')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--c-surface)')}
         >
           グリッドサイズ変更
         </button>
       </div>
 
       <div className="overflow-x-auto">
-        <div
-          className="inline-grid gap-1"
-          style={{ gridTemplateColumns: `repeat(${field.gridCols}, 68px)` }}
-        >
+        <div className="inline-grid gap-1.5" style={{ gridTemplateColumns: `repeat(${field.gridCols}, 72px)` }}>
           {Array.from({ length: field.gridRows }, (_, r) =>
             Array.from({ length: field.gridCols }, (_, c) => {
               const key = `${r}-${c}`;
@@ -46,28 +44,33 @@ export function HatakeMap() {
                 <button
                   key={key}
                   onClick={() => setCellModal({ row: r, col: c })}
-                  className="w-[68px] h-[92px] rounded border text-left p-1 relative transition-opacity hover:opacity-80"
+                  className="w-[72px] h-[96px] rounded-lg text-left p-1.5 relative transition-all hover:scale-[1.02]"
                   style={
                     crop
-                      ? { backgroundColor: crop.color + '33', borderColor: crop.color }
-                      : { backgroundColor: '#0f3460', borderColor: '#2d3748' }
+                      ? { backgroundColor: crop.color + '22', border: `1px solid ${crop.color}66` }
+                      : { backgroundColor: 'var(--c-surface)', border: '1px solid var(--c-border)' }
                   }
                 >
-                  <span className="text-[9px] text-[#a0aec0] absolute top-1 left-1">
+                  <span className="text-[9px] absolute top-1.5 left-1.5" style={{ color: 'var(--c-faint)' }}>
                     {cellLabel(r, c)}
                   </span>
-                  {crop && (
+                  {crop ? (
                     <div className="flex flex-col items-center justify-center h-full gap-0.5">
-                      <span className="text-base">🌱</span>
-                      <span className="text-[10px] text-[#e2e8f0] text-center leading-tight line-clamp-2">
+                      <span className="text-lg">🌱</span>
+                      <span className="text-[10px] text-center leading-tight line-clamp-2 font-medium"
+                        style={{ color: 'var(--c-text)' }}>
                         {crop.name}
                       </span>
                       {plotData?.plantedDate && (
-                        <span className="text-[9px] text-[#a0aec0]">植:{fmtShort(plotData.plantedDate)}</span>
+                        <span className="text-[9px]" style={{ color: 'var(--c-muted)' }}>植:{fmtShort(plotData.plantedDate)}</span>
                       )}
                       {plotData?.expectedHarvest && (
-                        <span className="text-[9px] text-[#a0aec0]">収:{fmtShort(plotData.expectedHarvest)}</span>
+                        <span className="text-[9px]" style={{ color: 'var(--c-muted)' }}>収:{fmtShort(plotData.expectedHarvest)}</span>
                       )}
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      <span className="text-lg opacity-10">＋</span>
                     </div>
                   )}
                 </button>
@@ -78,22 +81,17 @@ export function HatakeMap() {
       </div>
 
       {legendCrops.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-5 flex flex-wrap gap-3">
           {legendCrops.map((c) => (
-            <div key={c.id} className="flex items-center gap-1.5 text-xs text-[#e2e8f0]">
-              <span
-                className="w-3 h-3 rounded-full inline-block"
-                style={{ backgroundColor: c.color }}
-              />
+            <div key={c.id} className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--c-muted)' }}>
+              <span className="w-2.5 h-2.5 rounded-full" style={{ background: c.color }} />
               {c.name}
             </div>
           ))}
         </div>
       )}
 
-      {cellModal && (
-        <CellModal row={cellModal.row} col={cellModal.col} onClose={() => setCellModal(null)} />
-      )}
+      {cellModal && <CellModal row={cellModal.row} col={cellModal.col} onClose={() => setCellModal(null)} />}
       {showResize && <GridResizeModal onClose={() => setShowResize(false)} />}
     </div>
   );
