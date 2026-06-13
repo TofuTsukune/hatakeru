@@ -1,0 +1,150 @@
+{
+  "fields": [
+    {
+      "id": "field-001",
+      "name": "家庭菜園",
+      "gridCols": 8,
+      "gridRows": 6,
+      "plots": {
+        "0-0": { "cropId": "crop-001", "plantedDate": "2026-04-10", "expectedHarvest": "2026-07-20" },
+        "0-1": { "cropId": "crop-001", "plantedDate": "2026-04-10", "expectedHarvest": "2026-07-20" },
+        "1-0": { "cropId": "crop-002", "plantedDate": "2026-04-15", "expectedHarvest": "2026-08-01" },
+        "1-1": { "cropId": "crop-002", "plantedDate": "2026-04-15", "expectedHarvest": "2026-08-01" },
+        "2-0": { "cropId": "crop-003", "plantedDate": "2026-05-01", "expectedHarvest": "2026-06-30" },
+        "2-1": { "cropId": "crop-003", "plantedDate": "2026-05-01", "expectedHarvest": "2026-06-30" },
+        "3-0": { "cropId": "crop-004", "plantedDate": "2026-03-20", "expectedHarvest": "2026-06-10" },
+        "4-0": { "cropId": "crop-005", "plantedDate": "2026-04-05", "expectedHarvest": "2026-09-30" }
+      }
+    }
+  ],
+  "activeFieldId": "field-001",
+  "crops": [
+    {
+      "id": "crop-001",
+      "fieldId": "field-001",
+      "name": "トマト",
+      "variety": "ミニトマト",
+      "status": "growing",
+      "color": "#e53e3e",
+      "notes": "支柱立て済み。わき芽かきを定期的に行う。"
+    },
+    {
+      "id": "crop-002",
+      "fieldId": "field-001",
+      "name": "キュウリ",
+      "variety": "夏すずみ",
+      "status": "growing",
+      "color": "#38a169",
+      "notes": "ネット張り済み。水やりをこまめに。"
+    },
+    {
+      "id": "crop-003",
+      "fieldId": "field-001",
+      "name": "レタス",
+      "variety": "グリーンウェーブ",
+      "status": "growing",
+      "color": "#68d391",
+      "notes": ""
+    },
+    {
+      "id": "crop-004",
+      "fieldId": "field-001",
+      "name": "ジャガイモ",
+      "variety": "男爵",
+      "status": "harvested",
+      "color": "#d69e2e",
+      "notes": "収穫完了。約3kg取れた。"
+    },
+    {
+      "id": "crop-005",
+      "fieldId": "field-001",
+      "name": "ナス",
+      "variety": "千両2号",
+      "status": "planned",
+      "color": "#805ad5",
+      "notes": "定植予定。苗を購入済み。"
+    }
+  ],
+  "logs": [
+    {
+      "id": "log-001",
+      "fieldId": "field-001",
+      "date": "2026-06-12",
+      "type": "water",
+      "cropId": "crop-001",
+      "notes": "朝水やり。土が乾燥気味だったので多めに。",
+      "cost": 0
+    },
+    {
+      "id": "log-002",
+      "fieldId": "field-001",
+      "date": "2026-06-10",
+      "type": "fertilize",
+      "notes": "液肥を全体に施肥。",
+      "cost": 350
+    },
+    {
+      "id": "log-003",
+      "fieldId": "field-001",
+      "date": "2026-06-08",
+      "type": "harvest",
+      "cropId": "crop-004",
+      "notes": "ジャガイモ収穫。天気が良く掘りやすかった。",
+      "harvestAmount": 3.2,
+      "harvestUnit": "kg"
+    },
+    {
+      "id": "log-004",
+      "fieldId": "field-001",
+      "date": "2026-06-05",
+      "type": "weed",
+      "notes": "畝間の草取り。約1時間作業。"
+    },
+    {
+      "id": "log-005",
+      "fieldId": "field-001",
+      "date": "2026-05-20",
+      "type": "plant",
+      "cropId": "crop-005",
+      "notes": "ナスの苗を定植。株間50cmで4株。",
+      "cost": 980
+    },
+    {
+      "id": "log-006",
+      "fieldId": "field-001",
+      "date": "2026-04-15",
+      "type": "plant",
+      "cropId": "crop-002",
+      "notes": "キュウリ苗の定植。ネット設置も完了。",
+      "cost": 580
+    }
+  ],
+  "events": [
+    {
+      "id": "event-001",
+      "fieldId": "field-001",
+      "date": "2026-06-15",
+      "title": "トマトのわき芽かき",
+      "type": "other",
+      "cropId": "crop-001",
+      "done": false
+    },
+    {
+      "id": "event-002",
+      "fieldId": "field-001",
+      "date": "2026-06-20",
+      "title": "液肥施肥",
+      "type": "fertilize",
+      "done": false
+    },
+    {
+      "id": "event-003",
+      "fieldId": "field-001",
+      "date": "2026-07-01",
+      "title": "レタス収穫予定",
+      "type": "harvest",
+      "cropId": "crop-003",
+      "done": false
+    }
+  ]
+}
